@@ -9,7 +9,7 @@ Created on Fri Sep 22 15:07:47 2023
 ## 1. Importing Libraries 
 
 import nltk
-# nltk.download()
+#nltk.download()
 
 import pandas as pd
 import numpy as np
@@ -17,10 +17,11 @@ import re
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.stem import WordNetLemmatizer
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 ## 2. Dataset input
 
-df = pd.read_csv('E:/CODSOFT INTERNSHIP/CODSOFT/1. TASK_1 Genre Classification Dataset/train_data.txt',sep=':::',names=['ID','TITLE','GENRE','DESCRIPTION'])
+df = pd.read_csv('D:/CodSoft Internship/1. TASK_1 Genre Classification Dataset/train_data.txt',sep=':::',names=['ID','TITLE','GENRE','DESCRIPTION'])
 df.head()
 
 ## 3. Merge Title and Description columns
@@ -74,7 +75,7 @@ text_data
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-vectorizer = TfidfVectorizer(max_features=2500)  # declaring the vectorizer object
+vectorizer = TfidfVectorizer(max_features=9000)  # declaring the vectorizer object and max features selected 9000
 
 X = vectorizer.fit_transform(text_data).toarray()  # convert the processed text to vectors
 
@@ -86,22 +87,67 @@ X
 
 df['GENRE'].value_counts()
 
-# Encoding Genre to numerical
+plt.figure(figsize=(70,30))
+
+sns.countplot(y=df['GENRE'],data=df)
+
+# Encoding Genre to numerical with Label Encoder
+
+y = df['GENRE']
+
+y
+
+from sklearn.preprocessing import LabelEncoder
+
+encoder = LabelEncoder()
+
+y = encoder.fit_transform(y)
 
 # Model building
 
+## 3. Shape of X and y
+
+print(f"Shape of X data : {X.shape}")
+print(f"Shape of y data : {y.shape}")
+
+## 4. Train Test Split
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state = 1)
+
+## 5. Naive Bayes
+
+from sklearn.naive_bayes import MultinomialNB
+
+model = MultinomialNB()
+
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+y_pred
+
+from sklearn.metrics import accuracy_score
+
+accuracy = accuracy_score(y_test,y_pred)
+
+print(accuracy)
+
+## 6. Logistic Regression
+
+from sklearn.linear_model import LogisticRegression
+
+model_log = LogisticRegression()
+
+model_log.fit(X_train, y_train)
+
+y_pred_log = model_log.predict(X_test)
+
+y_pred_log
 
 
+accuracy_log = accuracy_score(y_test,y_pred_log)
 
-
-
-
-
-
-
-
-
-
-
-
+print(accuracy_log)
 
