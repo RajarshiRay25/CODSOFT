@@ -19,7 +19,7 @@ import seaborn as sns
 
 # Dataset input
 
-df = pd.read_csv('D:/CodSoft Internship/3. TASK_3 Email spam detection/spam.csv', encoding='ISO-8859-1')
+df = pd.read_csv('E:/CODSOFT INTERNSHIP/CODSOFT/3. TASK_3 Email spam detection/spam.csv', encoding='ISO-8859-1')
 df.columns
 
 # Renaming v1 and v2 columns to type and message and dropping the other columns
@@ -40,7 +40,7 @@ df.isnull().sum()   # null check
 df.duplicated().sum()  # duplicate value check
 
 df.drop_duplicates(keep='first', inplace=True)  # keeping only first unique and removing its duplicate
-
+df.reset_index(drop=True, inplace=True)
 df.shape
 
 # Dataset operations
@@ -128,6 +128,18 @@ X_training_set = vectorizer(text_data_train_file)
 X_training_set
 
 
+
+# EDA on data
+def count_plot(df):
+    sns.countplot(x=df['mail_type'],data=df,hue=df.mail_type)
+    plt.xticks(ticks=[0,1] , labels=['ham','spam'])
+    plt.title('Email category counts')
+    plt.legend(title = 'Mail Type' , labels = ['Ham','Spam'])
+    
+    
+    
+count_plot(df)
+
 # Separating the X and y
 
 X = X_training_set
@@ -135,12 +147,26 @@ y = df['mail_type']
 
 print(X.shape,y.shape)
 
-# fix y
+# Train test split
 
+from sklearn.model_selection import train_test_split
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state = 1,stratify=y)
 
+# Multi model training
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
 
+model_list = [MultinomialNB(),LogisticRegression(),SVC(kernel = 'linear')]
 
+for model in model_list:
+    model.fit(X_train,y_train)
+    pred_score = model.predict(X_test)
+    accuracy = accuracy_score(y_test,pred_score)
+    print(f"Model used : {model} and accuracy score : {round(accuracy*100,2)} %")
+    
 
 
 
