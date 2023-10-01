@@ -19,7 +19,7 @@ import seaborn as sns
 
 # Dataset input
 
-df = pd.read_csv('E:/CODSOFT INTERNSHIP/CODSOFT/3. TASK_3 Email spam detection/spam.csv', encoding='ISO-8859-1')
+df = pd.read_csv('D:/CodSoft Internship/3. TASK_3 Email spam detection/spam.csv', encoding='ISO-8859-1')
 df.columns
 
 # Renaming v1 and v2 columns to type and message and dropping the other columns
@@ -131,11 +131,9 @@ X_training_set
 
 # EDA on data
 def count_plot(df):
-    sns.countplot(x=df['mail_type'],data=df,hue=df.mail_type)
+    sns.countplot(x=df['mail_type'],data=df)
     plt.xticks(ticks=[0,1] , labels=['ham','spam'])
     plt.title('Email category counts')
-    plt.legend(title = 'Mail Type' , labels = ['Ham','Spam'])
-    
     
     
 count_plot(df)
